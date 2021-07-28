@@ -16,10 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from main.views import *
+from main.views import IndexPageView
 
 urlpatterns = [
-    path("", IndexPageView.as_view(), name="index"),
     path("admin/", admin.site.urls),
     path("pages/", include("django.contrib.flatpages.urls")),
+    path("", IndexPageView.as_view(), name="index"),
 ]
