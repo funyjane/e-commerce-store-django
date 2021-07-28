@@ -21,6 +21,5 @@ class FlatPageAdmin(FlatPageAdminOld):
     form = FlatpageForm
 
 
-# We have to unregister the normal admin, and then reregister ours
 admin.site.unregister(FlatPage)
 admin.site.register(FlatPage, FlatPageAdmin)
