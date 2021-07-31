@@ -1,23 +1,53 @@
+from django.utils.text import slugify
+from django.contrib.auth.models import User
 from django.db import models
 
-
-class Listing(models.Model):
-    title = models.CharField(blank=False, null=False, max_length=100)
-    description = models.TextField(blank=False, null=False)
-    category = models.ForeignKey(Category, null=False, on_delete=models.SET_NULL)
-    seller = models.ForeignKey(Owner, null=False, on_delete=models.SET_NULL)
-    created_at = models.DateField(auto_now_add=True)
-    edited_at = models.DateField(auto_now_add=True)
-    tags = models.ManyToManyField(Tag)
+from .utils import random_string_generator
 
 
 class Category(models.Model):
-    pass
+    title = models.CharField(max_length=100)
+    slug = models.SlugField(blank=False)
+
+    def unique_slug_generator(instance, new_slug=None):
+
+        if new_slug is not None:
+            slug = new_slug
+        else:
+            slug = slugify(instance.title)
+
+        Category = instance.__class__
+        qs_exists = Category.objects.filter(slug=slug).exists()
+        if qs_exists:
+            new_slug = "{slug}-{randstr}".format(
+                slug=slug, randstr=random_string_generator(size=4)
+            )
+            return unique_slug_generator(instance, new_slug=new_slug)
+        return slug
 
 
-class Owner(models.Model):
-    pass
+class Seller(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def get_all_listings(self):
+
+        listings = Listing.objects.filter(seller=self.user)
+
+        if listings:
+            return listings
+        else:
+            print("This seller has no listings")
 
 
 class Tag(models.Model):
-    pass
+    title = models.CharField(max_length=100)
+
+
+class Listing(models.Model):
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    category = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
+    seller = models.ForeignKey(Seller, null=True, on_delete=models.SET_NULL)
+    created_at = models.DateField(auto_now_add=True)
+    edited_at = models.DateField(auto_now=True)
+    tags = models.ManyToManyField(Tag)
