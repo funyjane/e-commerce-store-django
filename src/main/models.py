@@ -29,6 +29,7 @@ class Category(models.Model):
 class Seller(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
+    @property
     def get_all_listings(self):
 
         listings = Listing.objects.filter(seller=self.user)
