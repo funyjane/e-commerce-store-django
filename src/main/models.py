@@ -1,6 +1,8 @@
-from django.utils.text import slugify
+from django.db.models.signals import pre_save
 from django.contrib.auth.models import User
 from django.db import models
+from slugify import slugify
+
 
 from .utils import random_string_generator
 
@@ -24,6 +26,13 @@ class Category(models.Model):
             )
             return unique_slug_generator(instance, new_slug=new_slug)
         return slug
+
+
+def pre_save_category_receiver():
+    pass
+
+
+pre_save.connect(pre_save_category_receiver, sender=Category)
 
 
 class Seller(models.Model):
