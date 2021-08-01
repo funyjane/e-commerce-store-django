@@ -36,7 +36,7 @@ class Seller(models.Model):
         if listings:
             return listings
         else:
-            print("This seller has no listings")
+            return "This seller has no listings"
 
 
 class Tag(models.Model):
