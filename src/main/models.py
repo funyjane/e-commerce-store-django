@@ -1,29 +1,17 @@
-from django.utils.text import slugify
 from django.contrib.auth.models import User
 from django.db import models
 
-from .utils import random_string_generator
+from .utils import unique_slug_generator
 
 
 class Category(models.Model):
     title = models.CharField(max_length=100)
     slug = models.SlugField(blank=False)
 
-    def unique_slug_generator(instance, new_slug=None):
-
-        if new_slug is not None:
-            slug = new_slug
-        else:
-            slug = slugify(instance.title)
-
-        Category = instance.__class__
-        qs_exists = Category.objects.filter(slug=slug).exists()
-        if qs_exists:
-            new_slug = "{slug}-{randstr}".format(
-                slug=slug, randstr=random_string_generator(size=4)
-            )
-            return unique_slug_generator(instance, new_slug=new_slug)
-        return slug
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = unique_slug_generator(self)
+        super(Category, self).save(*args, **kwargs)
 
 
 class Seller(models.Model):
