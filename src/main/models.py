@@ -32,7 +32,7 @@ class Seller(models.Model):
     @property
     def get_all_listings(self):
 
-        listings = Listing.objects.filter(seller=self.user)
+        listings = Listing.objects.filter(seller=self.user).count()
 
         if listings:
             return listings
@@ -52,3 +52,6 @@ class Listing(models.Model):
     created_at = models.DateField(auto_now_add=True)
     edited_at = models.DateField(auto_now=True)
     tags = models.ManyToManyField(Tag)
+
+    def __str__(self):
+        return self.title
