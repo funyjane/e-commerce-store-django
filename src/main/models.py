@@ -6,7 +6,7 @@ from .utils import unique_slug_generator
 
 class Category(models.Model):
     title = models.CharField(max_length=100)
-    slug = models.SlugField(blank=False)
+    slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
