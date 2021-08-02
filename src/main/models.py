@@ -37,6 +37,7 @@ class Tag(models.Model):
 class Listing(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
+    price = models.PositiveIntegerField(blank=False, default=1)
     category = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
     seller = models.ForeignKey(Seller, null=True, on_delete=models.SET_NULL)
     created_at = models.DateField(auto_now_add=True)
