@@ -24,7 +24,7 @@ class Seller(User):
         return a number of all listing from the seller
         """
 
-        listings = Listing.objects.filter(seller=self.user).count()
+        listings = AbstractBaseListing.objects.filter(seller=self.user).count()
 
         if listings:
             return listings
