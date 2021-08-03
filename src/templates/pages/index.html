@@ -96,9 +96,9 @@
             <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
             {% if user.is_authenticated %}
             <li>
-              <a class="nav-link-user" href="#"
-                ><i class="bi bi-person"></i> {% firstof user.first_name user.username %}</a
-              >
+              <a class="nav-link-user" href="#">
+                <i class="bi bi-person"></i> {% firstof user.first_name user.username %}
+              </a>
             </li>
             {% endif %}
           </ul>
