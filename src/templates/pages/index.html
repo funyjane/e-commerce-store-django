@@ -1,19 +1,19 @@
 {% extends 'base.html' %}
+{% load extra_tags %}
 {% load static %}
 
     {% block hero %}
     <!-- ======= Hero Section ======= -->
     <section id="hero">
       <div class="hero-container" data-aos="zoom-in" data-aos-delay="100">
-        {% if 'maintenance' %}
+        {% if config.MAINTENANCE_MODE %}
         <div class="maintenance_mode">
           <h2 class="text-center" style="margin-top: 25%; font-size: 50px">
-            Oops, site is undergoing a brief maintenance, we will be back with your
-            shortly!
-          </h2>
+            Oops, site is undergoing a brief maintenance, we will be back with you {% reverse_string 'yltrohs' %}!</h2>
+            <h2 class="text-center" style="font-size: 40px">Current server time: {% now "H:i" %}</h2>
         </div>
         {% endif %}
-        {% if 'maintenance' is False %}
+        {% if config.MAINTENANCE_MODE is False %}
         <h1>Welcome to Rynok</h1>
         <h2>We will help you sell anything and even your mom...</h2>
         <a href="#about" class="btn-get-started">Get Started</a>

@@ -144,7 +144,7 @@ SITE_ID = 1
 CONSTANCE_CONFIG = {
     "MAINTENANCE_MODE": (
         False,
-        "Shows mainetence message banner when platform is under mainetence",
+        "Shows maintenance message banner when platform is under maintenance",
         bool,
     ),
 }

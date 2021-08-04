@@ -37,7 +37,7 @@ class Seller(User):
         verbose_name = "Seller"
 
     def __str__(self):
-        return self.username
+        return f"{self.username}"
 
 
 class Tag(models.Model):
