@@ -112,7 +112,7 @@
     <!-- ======= Hero Section ======= -->
     <section id="hero">
       <div class="hero-container" data-aos="zoom-in" data-aos-delay="100">
-        {% if config.MAINTENANCE_MODE %}
+        {% if 'maintenance' %}
         <div class="maintenance_mode">
           <h2 class="text-center" style="margin-top: 25%; font-size: 50px">
             Oops, site is undergoing a brief maintenance, we will be back with your
@@ -120,7 +120,7 @@
           </h2>
         </div>
         {% endif %}
-        {% if config.MAINTENANCE_MODE is False%}
+        {% if 'maintenance' is False %}
         <h1>Welcome to Rynok</h1>
         <h2>We will help you sell anything and even your mom...</h2>
         <a href="#about" class="btn-get-started">Get Started</a>
