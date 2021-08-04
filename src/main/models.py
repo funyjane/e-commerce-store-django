@@ -33,6 +33,9 @@ class Seller(User):
         else:
             return "This seller has no listings"
 
+    class Meta:
+        verbose_name = "Seller"
+
     def __str__(self):
         return self.username
 

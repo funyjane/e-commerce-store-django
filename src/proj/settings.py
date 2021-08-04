@@ -39,8 +39,10 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
     "django.contrib.flatpages",
-    "main",
+    "constance",
+    "constance.backends.database",
     "ckeditor",
+    "main",
 ]
 
 MIDDLEWARE = [
@@ -67,6 +69,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "constance.context_processors.config",
             ],
         },
     },
@@ -133,4 +136,19 @@ STATIC_URL = "/static/"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Sites id
 SITE_ID = 1
+
+# django-constance variables
+CONSTANCE_CONFIG = {
+    "MAINTENANCE_MODE": (
+        False,
+        "Shows mainetence message banner when platform is under mainetence",
+        bool,
+    ),
+}
+
+CONSTANCE_IGNORE_ADMIN_VERSION_CHECK = True
+CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
+CONSTANCE_DATABASE_PREFIX = "constance:rynok:"
