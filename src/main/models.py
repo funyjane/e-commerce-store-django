@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
+from slugify import slugify
+
 
 from .utils import unique_slug_generator
 
