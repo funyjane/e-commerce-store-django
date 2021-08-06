@@ -5,7 +5,9 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
-    {% block title %}<title>Rynok Marketplace</title>{% endblock title %}
+    {% block title %}
+    <title>Rynok Marketplace</title>
+    {% endblock title %}
     <meta content="" name="description" />
     <meta content="" name="keywords" />
 
@@ -50,8 +52,7 @@
   </head>
 
   <body>
-    {% include "header.html" %}
-    {% block hero %}
+    {% include "header.html" %} {% block hero %}
     <!-- ======= Hero Section ======= -->
     <section id="hero">
       <div class="hero-container" data-aos="zoom-in" data-aos-delay="100">
@@ -64,6 +65,7 @@
     {% endblock hero %}
 
     <main id="main">
+      {% block content %} {% endblock content %}
 
       <!-- ======= Contact Section ======= -->
       <section id="contact">
