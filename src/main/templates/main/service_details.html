@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Listings{% endblock title %}
+{% block content %}
+<!-- ======= Portfolio Details Section ======= -->
+<section id="portfolio-details" class="portfolio-details">
+  <div class="container">
+
+    <div class="row gy-4">
+
+      <div class="col-lg-8">
+        <div class="portfolio-details-slider swiper-container">
+          <div class="swiper-wrapper align-items-center">
+
+            <div class="swiper-slide">
+              <img src="{% static 'img/portfolio/portfolio-details-1.jpg' %}" alt="">
+            </div>
+
+            <div class="swiper-slide">
+              <img src="{% static 'img/portfolio/portfolio-details-1.jpg' %}" alt="">
+            </div>
+
+            <div class="swiper-slide">
+              <img src="{% static 'img/portfolio/portfolio-details-1.jpg' %}" alt="">
+            </div>
+
+          </div>
+          <div class="swiper-pagination"></div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="portfolio-info">
+          <h3>{{ object.title }}</h3>
+          <ul>
+            <li><strong>Category</strong>: {{ object.category.title }}</li>
+            <li><strong>Service Type</strong>: {{ object.type_of }}</li>
+            <li><strong>Seller</strong>: {{ object.seller.username }}</li>
+            <li><strong>Published</strong>: {{ object.created_at }}</li>
+            <li><strong>Price</strong>: {{ object.price }}$</li>
+          </ul>
+        </div>
+        <div class="portfolio-description">
+          <h2>Description:</h2>
+          <p>
+            {{ object.description }}     
+          </p>
+        </div>
+        <div class="portfolio-info">
+          <ul>
+            <li>tags</strong>: {% for tag in object.tags.all %}#{{ tag.title }} {% endfor %}</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section><!-- End Portfolio Details Section -->
+{% endblock content %}
