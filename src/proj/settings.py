@@ -53,6 +53,8 @@ THIRD_PARTY_APPS = [
     "constance",
     "constance.backends.database",
     "ckeditor",
+    "crispy_forms",
+    "crispy_bootstrap5",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
@@ -164,3 +166,6 @@ CONSTANCE_CONFIG = {
 CONSTANCE_IGNORE_ADMIN_VERSION_CHECK = True
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
 CONSTANCE_DATABASE_PREFIX = "constance:rynok:"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

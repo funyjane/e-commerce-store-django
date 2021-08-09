@@ -20,6 +20,8 @@ class Category(models.Model):
 
 
 class Seller(User):
+    code_inn = models.CharField(verbose_name="Tax Code", max_length=12, default="")
+
     @property
     def get_all_listings(self):
         """
