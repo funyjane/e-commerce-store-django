@@ -22,4 +22,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("pages/", include("django.contrib.flatpages.urls")),
     path("", IndexPageView.as_view(), name="index"),
+    path("main/", include("main.urls", namespace="main")),
 ]
