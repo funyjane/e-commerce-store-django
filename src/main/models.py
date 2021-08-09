@@ -16,7 +16,7 @@ class Category(models.Model):
         super(Category, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.title
+        return f"{self.title}"
 
 
 class Seller(User):
@@ -44,7 +44,7 @@ class Tag(models.Model):
     title = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.title
+        return f"{self.title}"
 
 
 class AbstractBaseListing(models.Model):
@@ -62,7 +62,7 @@ class AbstractBaseListing(models.Model):
     tags = models.ManyToManyField(Tag, related_name="listing")
 
     def __str__(self):
-        return self.title
+        return f"{self.title}"
 
 
 class Item(AbstractBaseListing):
