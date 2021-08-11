@@ -1,11 +1,17 @@
 from django.shortcuts import get_object_or_404
-from django.urls import reverse_lazy
-from django.views.generic import TemplateView, ListView, DetailView, UpdateView
+from django.urls import reverse_lazy, reverse
+from django.views.generic import (
+    TemplateView,
+    ListView,
+    DetailView,
+    UpdateView,
+    CreateView,
+)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from constance import config
 
 from .models import AbstractBaseListing, Item, Car, Service, Tag, Seller
-from .forms import SellerForm
+from .forms import SellerForm, BaseListingForm, CarForm, ItemForm, ServiceForm
 
 
 class IndexPageView(TemplateView):
@@ -37,6 +43,37 @@ class BaseListingListView(ListView):
 class BaseListingView(DetailView):
     template_name = "main/listing_details.html"
     model = AbstractBaseListing
+
+
+class BaseListingCreateView(CreateView):
+
+    model = AbstractBaseListing
+    form_class = BaseListingForm
+    template_name = "main/listing_create.html"
+
+    def get_success_url(self):
+        return reverse("main:listing-update", kwargs={"pk": self.kwargs["pk"]})
+
+    def form_valid(self, form):
+        form.instance.seller = Seller.objects.get(id=self.request.user.id)
+        return super().form_valid(form)
+
+
+class BaseListingUpdateView(UpdateView):
+
+    model = AbstractBaseListing
+    form_class = BaseListingForm
+    template_name = "main/listing_update.html"
+
+    def form_valid(self, form):
+        form.instance.seller = Seller.objects.get(id=self.request.user.id)
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("main:listing-update", kwargs={"pk": self.kwargs["pk"]})
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(AbstractBaseListing, id=self.kwargs["pk"])
 
 
 class ItemListView(ListView):

@@ -6,6 +6,12 @@ app_name = "main"
 urlpatterns = [
     path("", BaseListingListView.as_view(), name="listing-catalog"),
     path("<int:pk>/", BaseListingView.as_view(), name="listing-details"),
+    path("listing/add/", BaseListingCreateView.as_view(), name="listing-create"),
+    path(
+        "listing/upd/<int:pk>",
+        BaseListingCreateView.as_view(),
+        name="listing-update",
+    ),
     path("items/", ItemListView.as_view(), name="item-catalog"),
     path("items/<int:pk>/", ItemView.as_view(), name="item-details"),
     path("cars/", CarListView.as_view(), name="car-catalog"),
