@@ -28,19 +28,6 @@ admin.site.unregister(FlatPage)
 admin.site.register(FlatPage, FlatPageAdmin)
 
 
-class UserAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "email",
-        "username",
-    )
-    list_display_links = (
-        "id",
-        "email",
-        "username",
-    )
-
-
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
@@ -56,8 +43,6 @@ class TagAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.unregister(User)
-admin.site.register(User, UserAdmin)
 admin.site.register(Seller)
 admin.site.register(Car)
 admin.site.register(Item)

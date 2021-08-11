@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from .views import *
 
 app_name = "main"
@@ -12,4 +12,6 @@ urlpatterns = [
     path("cars/<int:pk>/", CarView.as_view(), name="car-details"),
     path("services/", ServiceListView.as_view(), name="service-catalog"),
     path("services/<int:pk>/", ServiceView.as_view(), name="service-details"),
+    path("accounts/", include("django.contrib.auth.urls")),
+    path("auth/seller/", SellerEditView.as_view(), name="seller-edit"),
 ]

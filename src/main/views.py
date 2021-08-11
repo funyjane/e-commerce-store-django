@@ -1,7 +1,11 @@
-from django.views.generic import TemplateView, ListView, DetailView
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView, ListView, DetailView, UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from constance import config
 
-from .models import AbstractBaseListing, Item, Car, Service, Tag
+from .models import AbstractBaseListing, Item, Car, Service, Tag, Seller
+from .forms import SellerForm
 
 
 class IndexPageView(TemplateView):
@@ -105,3 +109,16 @@ class ServiceListView(ListView):
 class ServiceView(DetailView):
     template_name = "main/service_details.html"
     model = Service
+
+
+class SellerEditView(LoginRequiredMixin, UpdateView):
+    """editing Seller"""
+
+    model = Seller
+    form_class = SellerForm
+    success_url = reverse_lazy("main:seller-edit")
+    template_name = "main/accounts/seller_edit.html"
+
+    def get_object(self, queryset=None):
+        user = self.request.user.id
+        return get_object_or_404(Seller, id=user)
