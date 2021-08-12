@@ -55,6 +55,7 @@ THIRD_PARTY_APPS = [
     "ckeditor",
     "crispy_forms",
     "crispy_bootstrap5",
+    "sorl.thumbnail",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
