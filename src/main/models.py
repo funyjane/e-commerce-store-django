@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-from slugify import slugify
-
+from sorl.thumbnail import ImageField
 
 from .utils import unique_slug_generator
 
@@ -21,6 +20,11 @@ class Category(models.Model):
 
 class Seller(User):
     code_inn = models.CharField(verbose_name="Tax Code", max_length=12, default="")
+    img = ImageField(
+        upload_to="uploads/profile_pics/",
+        default="uploads/profile/default.png",
+        null=False,
+    )
 
     @property
     def get_all_listings(self):
@@ -83,3 +87,9 @@ class ArchiveListing(AbstractBaseListing):
     class Meta:
         proxy = True
         ordering = ["created_at"]
+
+
+class Picture(models.Model):
+
+    img = ImageField(upload_to="uploads/cars/", null=False)
+    car = models.ForeignKey(Car, on_delete=models.CASCADE, null=False)
