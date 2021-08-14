@@ -153,17 +153,22 @@ class CarCreateView(BaseListingCreateView):
         return reverse("main:car-update", kwargs={"pk": self.object.pk})
 
     def get_context_data(self, **kwargs):
-        car_object = self.object
-        formset = PictureFormset(instance=car_object)
-
         context = super().get_context_data(**kwargs)
-        context["picture_forms"] = formset
+        context["picture_forms"] = PictureFormset()
         return context
 
     def form_valid(self, form):
-        form.instance.seller = Seller.objects.get(id=self.request.user.id)
-
-        return super().form_valid(form)
+        form.instance.seller = self.request.user.seller
+        advert_form = form.save(commit=False)
+        formset = PictureFormset(
+            self.request.POST, self.request.FILES, instance=advert_form
+        )
+        if formset.is_valid():
+            formset.instance = form.save()
+            formset.save()
+            return super(CarCreateView, self).form_valid(form)
+        else:
+            return self.render_to_response({"form": form, "picture_forms": formset})
 
 
 class CarUpdateView(BaseListingUpdateView):
@@ -174,12 +179,22 @@ class CarUpdateView(BaseListingUpdateView):
         return reverse("main:car-update", kwargs={"pk": self.object.pk})
 
     def get_context_data(self, **kwargs):
-        car_object = self.object
-        formset = PictureFormset(instance=car_object)
-
         context = super().get_context_data(**kwargs)
-        context["picture_forms"] = formset
+        context["picture_forms"] = PictureFormset()
         return context
+
+    def form_valid(self, form):
+        form.instance.seller = self.request.user.seller
+        advert_form = form.save(commit=False)
+        formset = PictureFormset(
+            self.request.POST, self.request.FILES, instance=advert_form
+        )
+        if formset.is_valid():
+            formset.instance = form.save()
+            formset.save()
+            return super(CarUpdateView, self).form_valid(form)
+        else:
+            return self.render_to_response({"form": form, "picture_forms": formset})
 
 
 class ServiceListView(ListView):
