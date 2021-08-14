@@ -1,11 +1,17 @@
 from django.shortcuts import get_object_or_404
-from django.urls import reverse_lazy
-from django.views.generic import TemplateView, ListView, DetailView, UpdateView
+from django.urls import reverse_lazy, reverse
+from django.views.generic import (
+    TemplateView,
+    ListView,
+    DetailView,
+    UpdateView,
+    CreateView,
+)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from constance import config
 
 from .models import AbstractBaseListing, Item, Car, Service, Tag, Seller
-from .forms import SellerForm
+from .forms import SellerForm, BaseListingForm, CarForm, ItemForm, ServiceForm
 
 
 class IndexPageView(TemplateView):
@@ -39,6 +45,26 @@ class BaseListingView(DetailView):
     model = AbstractBaseListing
 
 
+class BaseListingCreateView(CreateView):
+
+    model = AbstractBaseListing
+    form_class = BaseListingForm
+    template_name = "main/listing_create.html"
+
+    def get_success_url(self):
+        return reverse("main:listing-update", kwargs={"pk": self.object.pk})
+
+
+class BaseListingUpdateView(UpdateView):
+
+    model = AbstractBaseListing
+    form_class = BaseListingForm
+    template_name = "main/listing_update.html"
+
+    def get_success_url(self):
+        return reverse("main:listing-update", kwargs={"pk": self.object.pk})
+
+
 class ItemListView(ListView):
     template_name = "main/item_list.html"
     model = Item
@@ -61,6 +87,22 @@ class ItemListView(ListView):
 class ItemView(DetailView):
     template_name = "main/item_details.html"
     model = Item
+
+
+class ItemCreateView(BaseListingCreateView):
+    model = Item
+    form_class = ItemForm
+
+    def get_success_url(self):
+        return reverse("main:item-update", kwargs={"pk": self.object.pk})
+
+
+class ItemUpdateView(BaseListingUpdateView):
+    model = Item
+    form_class = ItemForm
+
+    def get_success_url(self):
+        return reverse("main:item-update", kwargs={"pk": self.object.pk})
 
 
 class CarListView(ListView):
@@ -87,6 +129,22 @@ class CarView(DetailView):
     model = Car
 
 
+class CarCreateView(BaseListingCreateView):
+    model = Car
+    form_class = CarForm
+
+    def get_success_url(self):
+        return reverse("main:car-update", kwargs={"pk": self.object.pk})
+
+
+class CarUpdateView(BaseListingUpdateView):
+    model = Car
+    form_class = CarForm
+
+    def get_success_url(self):
+        return reverse("main:car-update", kwargs={"pk": self.object.pk})
+
+
 class ServiceListView(ListView):
     template_name = "main/service_list.html"
     model = Service
@@ -109,6 +167,22 @@ class ServiceListView(ListView):
 class ServiceView(DetailView):
     template_name = "main/service_details.html"
     model = Service
+
+
+class ServiceCreateView(BaseListingCreateView):
+    model = Service
+    form_class = ServiceForm
+
+    def get_success_url(self):
+        return reverse("main:service-update", kwargs={"pk": self.object.pk})
+
+
+class ServiceUpdateView(BaseListingUpdateView):
+    model = Service
+    form_class = ServiceForm
+
+    def get_success_url(self):
+        return reverse("main:service-update", kwargs={"pk": self.object.pk})
 
 
 class SellerEditView(LoginRequiredMixin, UpdateView):
