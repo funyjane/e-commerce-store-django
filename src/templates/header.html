@@ -1,3 +1,4 @@
+{% load thumbnail %}
     <!-- ======= Header ======= -->
     <header
       id="header"
@@ -43,9 +44,14 @@
             </li>
             <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
             {% if user.is_authenticated %}
+            <li style="margin-right: 0px;">
+                {% thumbnail user.seller.img "30x30" crop="center" as im %}
+                    <img src="{{ im.url }}" class="img-thumbnail mr-3">
+                {% endthumbnail %}
+            </li>
             <li>
               <a class="nav-link-user" href="#">
-                <i class="bi bi-person"></i> {% firstof user.first_name user.username %}
+                <i class="bi bi-person" style="margin-left: 0px;"></i> {% firstof user.first_name user.username %}
               </a>
             </li>
             {% endif %}
