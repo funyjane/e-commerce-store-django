@@ -93,3 +93,6 @@ class Picture(models.Model):
 
     img = ImageField(upload_to="uploads/cars/", null=False)
     car = models.ForeignKey(Car, on_delete=models.CASCADE, null=False)
+
+    def __str__(self):
+        return f"{self.img.path}"
