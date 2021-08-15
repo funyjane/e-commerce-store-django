@@ -1,9 +1,20 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.db import models
 from sorl.thumbnail import ImageField
 
 from .utils import validate_inn
 from .utils import unique_slug_generator
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    """
+    Assign the default common_users group to every new user
+    """
+    if created:
+        instance.groups.add(Group.objects.get_or_create(name="common_users")[0].id)
 
 
 class Category(models.Model):
