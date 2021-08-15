@@ -158,6 +158,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Sites id
 SITE_ID = 1
+LOGIN_URL = "/admin/login/"
 
 # django-constance variables
 CONSTANCE_CONFIG = {
