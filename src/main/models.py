@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User, Group
 from django.db.models.signals import post_save
+from django.core.mail import send_mail
 from django.dispatch import receiver
 from django.db import models
 from sorl.thumbnail import ImageField
@@ -15,6 +16,20 @@ def create_user_profile(sender, instance, created, **kwargs):
     """
     if created:
         instance.groups.add(Group.objects.get_or_create(name="common users")[0].id)
+        """
+        Send welcome msg
+        """
+        send_mail(
+            "Welcome at rynok.com",
+            f"Welcome {instance.username} please stay with us!",
+            "admin@example.com",
+            [instance.email],
+            fail_silently=False,
+            auth_user=None,
+            auth_password=None,
+            connection=None,
+            html_message=None,
+        )
 
 
 class Category(models.Model):
