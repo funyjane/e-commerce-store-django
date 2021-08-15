@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 from django.views.generic import (
     TemplateView,
     ListView,
@@ -62,6 +63,12 @@ class BaseListingCreateView(CreateView):
 
     def get_success_url(self):
         return reverse("main:listing-update", kwargs={"pk": self.object.pk})
+
+    def form_valid(self, form):
+        if self.request.user.groups.filter(name="banned users").exists():
+            raise PermissionDenied(_("Ops, you have been banned, you cannot post!"))
+        else:
+            return super().form_valid(form)
 
 
 class BaseListingUpdateView(UpdateView):
