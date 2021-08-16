@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from sorl.thumbnail import ImageField
 
+from .utils import validate_inn
 from .utils import unique_slug_generator
 
 
@@ -19,7 +20,9 @@ class Category(models.Model):
 
 
 class Seller(User):
-    code_inn = models.CharField(verbose_name="Tax Code", max_length=12, default="")
+    code_inn = models.CharField(
+        verbose_name="Tax Code", max_length=12, default="", validators=[validate_inn]
+    )
     img = ImageField(
         upload_to="uploads/profile_pics/",
         default="uploads/profile/default.png",
