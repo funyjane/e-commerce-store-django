@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load thumbnail %}
 {% block title %}Listings{% endblock title %}
 {% block content %}
 <!-- ======= Portfolio Details Section ======= -->
@@ -11,10 +12,13 @@
       <div class="col-lg-8">
         <div class="portfolio-details-slider swiper-container">
           <div class="swiper-wrapper align-items-center">
-
+            {% if picture %}
             <div class="swiper-slide">
-              <img src="{% static 'img/portfolio/portfolio-details-1.jpg' %}" alt="">
+              {% thumbnail picture "800x600" crop="center" as im %}
+              <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" class="img-thumbnail mr-3" alt="">
+              {% endthumbnail %}
             </div>
+            {% endif %}
 
             <div class="swiper-slide">
               <img src="{% static 'img/portfolio/portfolio-details-1.jpg' %}" alt="">

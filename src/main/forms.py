@@ -1,6 +1,8 @@
 from django import forms
 from django.forms import ModelForm
-from .models import AbstractBaseListing, Seller, Car, Item, Service, Tag
+from django.forms.models import inlineformset_factory
+
+from .models import AbstractBaseListing, Seller, Car, Item, Service, Tag, Picture
 
 
 class SellerForm(ModelForm):
@@ -47,3 +49,12 @@ class ServiceForm(ModelForm):
     class Meta:
         model = Service
         fields = "__all__"
+
+
+class PictureForm(ModelForm):
+    class Meta:
+        model = Picture
+        fields = ["img"]
+
+
+PictureFormset = inlineformset_factory(Car, Picture, form=PictureForm, max_num=1)

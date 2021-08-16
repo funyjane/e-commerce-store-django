@@ -10,8 +10,15 @@ from django.views.generic import (
 from django.contrib.auth.mixins import LoginRequiredMixin
 from constance import config
 
-from .models import AbstractBaseListing, Item, Car, Service, Tag, Seller
-from .forms import SellerForm, BaseListingForm, CarForm, ItemForm, ServiceForm
+from .models import AbstractBaseListing, Item, Car, Service, Tag, Seller, Picture
+from .forms import (
+    SellerForm,
+    BaseListingForm,
+    CarForm,
+    ItemForm,
+    ServiceForm,
+    PictureFormset,
+)
 
 
 class IndexPageView(TemplateView):
@@ -128,6 +135,15 @@ class CarView(DetailView):
     template_name = "main/car_details.html"
     model = Car
 
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        try:
+            img = Picture.objects.filter(car=self.get_object()).last()
+        except:
+            img = None
+        data["picture"] = img
+        return data
+
 
 class CarCreateView(BaseListingCreateView):
     model = Car
@@ -136,6 +152,24 @@ class CarCreateView(BaseListingCreateView):
     def get_success_url(self):
         return reverse("main:car-update", kwargs={"pk": self.object.pk})
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["picture_forms"] = PictureFormset()
+        return context
+
+    def form_valid(self, form):
+        form.instance.seller = self.request.user.seller
+        advert_form = form.save(commit=False)
+        formset = PictureFormset(
+            self.request.POST, self.request.FILES, instance=advert_form
+        )
+        if formset.is_valid():
+            formset.instance = form.save()
+            formset.save()
+            return super(CarCreateView, self).form_valid(form)
+        else:
+            return self.render_to_response({"form": form, "picture_forms": formset})
+
 
 class CarUpdateView(BaseListingUpdateView):
     model = Car
@@ -143,6 +177,24 @@ class CarUpdateView(BaseListingUpdateView):
 
     def get_success_url(self):
         return reverse("main:car-update", kwargs={"pk": self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["picture_forms"] = PictureFormset()
+        return context
+
+    def form_valid(self, form):
+        form.instance.seller = self.request.user.seller
+        advert_form = form.save(commit=False)
+        formset = PictureFormset(
+            self.request.POST, self.request.FILES, instance=advert_form
+        )
+        if formset.is_valid():
+            formset.instance = form.save()
+            formset.save()
+            return super(CarUpdateView, self).form_valid(form)
+        else:
+            return self.render_to_response({"form": form, "picture_forms": formset})
 
 
 class ServiceListView(ListView):
