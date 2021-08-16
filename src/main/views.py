@@ -145,7 +145,7 @@ class CarView(DetailView):
         return data
 
 
-class CarCreateView(BaseListingCreateView):
+class CarCreateView(LoginRequiredMixin, BaseListingCreateView):
     model = Car
     form_class = CarForm
 
@@ -171,7 +171,7 @@ class CarCreateView(BaseListingCreateView):
             return self.render_to_response({"form": form, "picture_forms": formset})
 
 
-class CarUpdateView(BaseListingUpdateView):
+class CarUpdateView(LoginRequiredMixin, BaseListingUpdateView):
     model = Car
     form_class = CarForm
 
@@ -221,7 +221,7 @@ class ServiceView(DetailView):
     model = Service
 
 
-class ServiceCreateView(BaseListingCreateView):
+class ServiceCreateView(LoginRequiredMixin, BaseListingCreateView):
     model = Service
     form_class = ServiceForm
 
@@ -229,7 +229,7 @@ class ServiceCreateView(BaseListingCreateView):
         return reverse("main:service-update", kwargs={"pk": self.object.pk})
 
 
-class ServiceUpdateView(BaseListingUpdateView):
+class ServiceUpdateView(LoginRequiredMixin, BaseListingUpdateView):
     model = Service
     form_class = ServiceForm
 
