@@ -22,9 +22,10 @@ from main.views import IndexPageView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("accounts/", include("allauth.urls")),
     path("pages/", include("django.contrib.flatpages.urls")),
     path("", IndexPageView.as_view(), name="index"),
-    path("main/", include("main.urls", namespace="main")),
+    path("", include("main.urls", namespace="main")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

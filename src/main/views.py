@@ -1,5 +1,7 @@
+from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
+from django.contrib import messages
 from django.views.generic import (
     TemplateView,
     ListView,
@@ -248,3 +250,31 @@ class SellerEditView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         user = self.request.user.id
         return get_object_or_404(Seller, id=user)
+
+
+class UserEditView(LoginRequiredMixin, UpdateView):
+    model = User
+    template_name = "main/accounts/user_edit.html"
+    success_url = reverse_lazy("main:user-edit")
+
+    fields = ("email", "first_name", "last_name")
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def form_valid(self, form):
+        if "email" in form.changed_data:
+
+            email = form.cleaned_data.get("email")
+            user = self.request.user
+            socialaccount = user.socialaccount_set.filter(user=user).first()
+            if socialaccount is not None:
+                if socialaccount.extra_data.get("email") != email:
+                    messages.error(self.request, "Email is invalid")
+                    return self.form_invalid(form)
+
+            messages.success(self.request, "Email successfully updated")
+            return super().form_valid(form)
+        else:
+            messages.success(self.request, "Email successfully updated")
+            return super().form_valid(form)

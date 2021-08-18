@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Seller Profile{% endblock title %}
+
+
+
+{% block content %}
+<h3 class="col-lg-12 d-flex justify-content-center" style="margin-top: 20px; margin-bottom: 0px;">Profile details:</h3>
+<div class="col-lg-12 d-flex justify-content-center" style="padding: 20px;">
+    {{ form.code_inn.errors }}
+    <form method="post" class="w-50">
+    {% csrf_token %}
+    {{ form|crispy }}
+        <div class="text-right"><input type="submit" class="btn btn-success mt-3" value="Update"></div>
+    </form>
+</div>
+{% endblock content %}

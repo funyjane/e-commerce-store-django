@@ -7,7 +7,7 @@ from .views import *
 app_name = "main"
 
 urlpatterns = [
-    path("", BaseListingListView.as_view(), name="listing-catalog"),
+    path("all/", BaseListingListView.as_view(), name="listing-catalog"),
     path("<int:pk>/", BaseListingView.as_view(), name="listing-details"),
     path("listing/add/", BaseListingCreateView.as_view(), name="listing-create"),
     path(
@@ -40,5 +40,6 @@ urlpatterns = [
         name="service-update",
     ),
     path("accounts/", include("django.contrib.auth.urls")),
-    path("auth/seller/", SellerEditView.as_view(), name="seller-edit"),
+    path("accounts/seller/", SellerEditView.as_view(), name="seller-edit"),
+    path("accounts/profile/", UserEditView.as_view(), name="user-edit"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
