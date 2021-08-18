@@ -14,7 +14,7 @@ def create_user_profile(sender, instance, created, **kwargs):
     Assign the default common_users group to every new user
     """
     if created:
-        instance.groups.add(Group.objects.get_or_create(name="common_users")[0].id)
+        instance.groups.add(Group.objects.get_or_create(name="common users")[0].id)
 
 
 class Category(models.Model):
