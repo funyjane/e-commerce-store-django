@@ -3,6 +3,7 @@ from django.db.models.signals import post_save
 from django.core.mail import send_mail
 from django.dispatch import receiver
 from django.db import models
+from django.template.loader import render_to_string
 from sorl.thumbnail import ImageField
 
 from .utils import validate_inn
@@ -21,14 +22,17 @@ def create_user_profile(sender, instance, created, **kwargs):
         """
         send_mail(
             "Welcome at rynok.com",
-            f"Welcome {instance.username} please stay with us!",
+            "",
             "admin@example.com",
             [instance.email],
             fail_silently=False,
             auth_user=None,
             auth_password=None,
             connection=None,
-            html_message=None,
+            html_message=render_to_string(
+                "account/email/email_confirmation_message.html",
+                context={"user": instance},
+            ),
         )
 
 
