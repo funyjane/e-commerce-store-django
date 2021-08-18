@@ -139,11 +139,10 @@ class CarView(DetailView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        try:
-            img = Picture.objects.filter(car=self.get_object()).last()
-        except:
-            img = None
-        data["picture"] = img
+        img = Picture.objects.filter(car=self.get_object()).last()
+
+        if img == None:
+            data["picture"] = img
         return data
 
 
