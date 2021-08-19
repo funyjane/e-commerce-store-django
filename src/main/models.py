@@ -74,8 +74,8 @@ class AbstractBaseListing(models.Model):
     seller = models.ForeignKey(
         Seller, null=True, related_name="listing", on_delete=models.SET_NULL
     )
-    created_at = models.DateField(auto_now_add=True)
-    edited_at = models.DateField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    edited_at = models.DateTimeField(auto_now=True)
     tags = models.ManyToManyField(Tag, related_name="listing")
 
     def __str__(self):
