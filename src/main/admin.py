@@ -9,7 +9,16 @@ from django.contrib.flatpages.admin import FlatpageForm as FlatpageFormOld
 from django import forms
 from ckeditor.widgets import CKEditorWidget
 
-from main.models import Category, Seller, Tag, Item, Car, Service, ArchiveListing
+from main.models import (
+    Category,
+    Seller,
+    Subscriber,
+    Tag,
+    Item,
+    Car,
+    Service,
+    ArchiveListing,
+)
 
 
 class FlatpageForm(FlatpageFormOld):
@@ -48,3 +57,4 @@ admin.site.register(Car)
 admin.site.register(Item)
 admin.site.register(Service)
 admin.site.register(ArchiveListing)
+admin.site.register(Subscriber)
