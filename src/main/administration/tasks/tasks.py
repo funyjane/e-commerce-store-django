@@ -3,7 +3,7 @@ import logging
 from django.conf import settings
 from django.utils.timezone import now
 from datetime import timedelta
-from ...models import Car, Item, Service, Subscriber
+from main.models import Car, Item, Service, Subscriber
 from django.core.mail import send_mail
 
 
@@ -22,34 +22,36 @@ interval = 3  # in minutes
 def mail_about_new_ads():
     # Your job processing logic here...
     now_time = now()
-    print("Starting mail_about_new_ads scheduled job at:", now_time.time())
+    logger("Starting mail_about_new_ads scheduled job at:", now_time.time())
     prev_time = now_time - timedelta(minutes=interval)
     cars = "<br>\n".join(
         [
-            f'<a href="http://localhost:8000/cars/{str(c.id)}">{c.title}</a>'
-            for c in Car.objects.filter(created_at__range=[prev_time, now_time])
+            f'<a href="http://localhost:8000/cars/{str(c.id)}">{car.title}</a>'
+            for car in Car.objects.filter(created_at__range=[prev_time, now_time])
         ]
     )
     things = "<br>\n".join(
         [
-            f'<a href="http://localhost:8000/items/{str(t.id)}">{t.title}</a>'
-            for t in Item.objects.filter(created_at__range=[prev_time, now_time])
+            f'<a href="http://localhost:8000/items/{str(t.id)}">{thing.title}</a>'
+            for thing in Item.objects.filter(created_at__range=[prev_time, now_time])
         ]
     )
     services = "<br>\n".join(
         [
-            f'<a href="http://localhost:8000/services/{str(s.id)}">{s.title}</a>'
-            for s in Service.objects.filter(created_at__range=[prev_time, now_time])
+            f'<a href="http://localhost:8000/services/{str(s.id)}">{service.title}</a>'
+            for service in Service.objects.filter(
+                created_at__range=[prev_time, now_time]
+            )
         ]
     )
 
     if cars or things or services:
         subs = dict()
-        for s in Subscriber.objects.all():
+        for sub in Subscriber.objects.all():
             if not subs.get(s.user.email):
-                subs[s.user.email] = [s.subscribed_to]
+                subs[sub.user.email] = [sub.subscribed_to]
             else:
-                subs[s.user.email] += [s.subscribed_to]
+                subs[sub.user.email] += [sub.subscribed_to]
         for email, subs_list in subs.items():
             send_mail(
                 "New listings at example.com",
