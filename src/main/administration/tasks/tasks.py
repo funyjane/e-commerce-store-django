@@ -26,19 +26,19 @@ def mail_about_new_ads():
     prev_time = now_time - timedelta(minutes=interval)
     cars = "<br>\n".join(
         [
-            f'<a href="http://localhost:8000/cars/{str(c.id)}">{car.title}</a>'
+            f'<a href="http://localhost:8000/cars/{str(car.id)}">{car.title}</a>'
             for car in Car.objects.filter(created_at__range=[prev_time, now_time])
         ]
     )
     things = "<br>\n".join(
         [
-            f'<a href="http://localhost:8000/items/{str(t.id)}">{thing.title}</a>'
+            f'<a href="http://localhost:8000/items/{str(thing.id)}">{thing.title}</a>'
             for thing in Item.objects.filter(created_at__range=[prev_time, now_time])
         ]
     )
     services = "<br>\n".join(
         [
-            f'<a href="http://localhost:8000/services/{str(s.id)}">{service.title}</a>'
+            f'<a href="http://localhost:8000/services/{str(service.id)}">{service.title}</a>'
             for service in Service.objects.filter(
                 created_at__range=[prev_time, now_time]
             )
