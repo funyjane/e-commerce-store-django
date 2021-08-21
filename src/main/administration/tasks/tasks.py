@@ -46,13 +46,14 @@ def mail_about_new_ads():
     )
 
     if cars or things or services:
-        subs = dict()
-        for sub in Subscriber.objects.all():
-            if not subs.get(s.user.email):
-                subs[sub.user.email] = [sub.subscribed_to]
+        subscribers = dict()
+        all_subs = Subscriber.objects.all()
+        for sub in all_subs:
+            if not subscribers.get(subscribers.user.email):
+                subscribers[sub.user.email] = [sub.subscribed_to]
             else:
-                subs[sub.user.email] += [sub.subscribed_to]
-        for email, subs_list in subs.items():
+                subscribers[sub.user.email] += [sub.subscribed_to]
+        for email, subs_list in subscribers.items():
             send_mail(
                 "New listings at example.com",
                 "",
