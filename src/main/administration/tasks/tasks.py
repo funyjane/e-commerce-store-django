@@ -22,7 +22,7 @@ interval = 3  # in minutes
 def mail_about_new_ads():
     # Your job processing logic here...
     now_time = now()
-    logger("Starting mail_about_new_ads scheduled job at:", now_time.time())
+    logger.info("Starting mail_about_new_ads scheduled job at:", now_time.time())
     prev_time = now_time - timedelta(minutes=interval)
     cars = "<br>\n".join(
         [
@@ -30,10 +30,10 @@ def mail_about_new_ads():
             for car in Car.objects.filter(created_at__range=[prev_time, now_time])
         ]
     )
-    things = "<br>\n".join(
+    items = "<br>\n".join(
         [
-            f'<a href="http://localhost:8000/items/{str(thing.id)}">{thing.title}</a>'
-            for thing in Item.objects.filter(created_at__range=[prev_time, now_time])
+            f'<a href="http://localhost:8000/items/{str(item.id)}">{item.title}</a>'
+            for item in Item.objects.filter(created_at__range=[prev_time, now_time])
         ]
     )
     services = "<br>\n".join(
@@ -45,23 +45,20 @@ def mail_about_new_ads():
         ]
     )
 
-    if cars or things or services:
+    if cars or items or services:
         subscribers = dict()
         all_subs = Subscriber.objects.all()
         for sub in all_subs:
-            if not subscribers.get(subscribers.user.email):
+            if all_subs.exists():
                 subscribers[sub.user.email] = [sub.subscribed_to]
-            else:
-                subscribers[sub.user.email] += [sub.subscribed_to]
-        for email, subs_list in subscribers.items():
-            send_mail(
-                "New listings at example.com",
-                "",
-                "admin@example.com",
-                [email],
-                html_message="You have subscribed to new listings. New listings have been placed just now:<br>\n"
-                + eval("+".join(subs_list)),
-            )
+                send_mail(
+                    "New listings at example.com",
+                    "",
+                    "admin@example.com",
+                    sub.user.email,
+                    html_message="You have subscribed to new listings. New listings have been placed just now:<br>\n"
+                    + eval("+".join(sub.subscribed_to)),
+                )
 
 
 # The `close_old_connections` decorator ensures that database connections, that have become
