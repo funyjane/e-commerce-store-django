@@ -50,7 +50,7 @@ def create_new_ad_actions(sender, instance, created, **kwargs):
             )
         ]
         email_subs_on_new_ad.delay(
-            instance._meta.model_name.capitalize(),
+            instance._meta.model_name,
             instance.pk,
             emails,
         )
