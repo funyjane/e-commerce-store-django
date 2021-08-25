@@ -3,6 +3,8 @@ import os
 from celery import Celery
 from django.conf import settings
 
+interval = 3
+
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "proj.settings")
 app = Celery("proj")
@@ -16,3 +18,8 @@ app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 @app.task(bind=True)
 def debug_task(self):
     print("Request: {0!r}".format(self.request))
+
+
+app.conf.beat_schedule = {
+    "new_lisings_week": {"task": "main.tasks.new_lisings_week", "schedule": 5.0}
+}
