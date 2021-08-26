@@ -6,6 +6,7 @@ from django.template.loader import render_to_string
 from django.contrib.auth.models import User, Group
 
 from .models import Subscriber, Item, Car, Service
+from .tasks import email_subs_on_new_ad
 
 
 @receiver(post_save, sender=User)
@@ -34,32 +35,22 @@ def create_user_profile(sender, instance, created, **kwargs):
         )
 
 
+@receiver(post_save, sender=Car)
 @receiver(post_save, sender=Item)
 @receiver(post_save, sender=Service)
-@receiver(post_save, sender=Car)
-def create_listing(sender, instance, created, **kwargs):
+def create_new_ad_actions(sender, instance, created, **kwargs):
     """
     sends email to Subscribers when new listing is created
     """
-
     if created:
-
-        subscribers = [
+        emails = [
             subs.user.email
             for subs in Subscriber.objects.filter(
                 subscribed_to=instance._meta.model_name.capitalize()
             )
         ]
-        print(subscribers)
-        print(instance._meta.model_name.capitalize())
-
-        if len(subscribers) > 0:
-            send_mail(
-                "New listing at example.com",
-                "",
-                "admin@example.com",
-                subscribers,
-                html_message=f'You have subscribed to {instance._meta.model_name}s. New {instance._meta.model_name} listing has been added. \
-                    <a href="http://example.com'
-                + f"{reverse('main:'+instance._meta.model_name+'-details', args=(instance.pk,))}\">View a listing</a>",
-            )
+        email_subs_on_new_ad.delay(
+            instance._meta.model_name,
+            instance.pk,
+            emails,
+        )
