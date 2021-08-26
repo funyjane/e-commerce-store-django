@@ -18,6 +18,7 @@ from main.models import (
     Car,
     Service,
     ArchiveListing,
+    SMSLog,
 )
 
 
@@ -58,3 +59,4 @@ admin.site.register(Item)
 admin.site.register(Service)
 admin.site.register(ArchiveListing)
 admin.site.register(Subscriber)
+admin.site.register(SMSLog)

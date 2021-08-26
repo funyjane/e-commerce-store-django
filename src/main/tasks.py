@@ -1,3 +1,6 @@
+import uuid
+import json
+
 from django.utils.timezone import now
 from django.core.mail import send_mail
 from django.urls import reverse
@@ -8,7 +11,7 @@ from twilio.rest import Client
 
 
 from main.administration.tasks.tasks import get_listings_by_created_range
-from .models import Subscriber, Car, Item, Service
+from main import models
 
 
 logger = get_task_logger(__name__)
@@ -33,15 +36,17 @@ def new_lisings_week():
     """Send weekly notifications."""
     current_time = now()
     last_message_time = current_time - timedelta(days=7)
-    new_car = get_listings_by_created_range(Car, last_message_time, current_time)
-    new_item = get_listings_by_created_range(Item, last_message_time, current_time)
+    new_car = get_listings_by_created_range(models.Car, last_message_time, current_time)
+    new_item = get_listings_by_created_range(
+        models.Item, last_message_time, current_time
+    )
     new_service = get_listings_by_created_range(
-        Service, last_message_time, current_time
+        models.Service, last_message_time, current_time
     )
 
     if new_car or new_item or new_service:
         subs = dict()
-        for sub in Subscriber.objects.all():
+        for sub in models.Subscriber.objects.all():
             if not subs.get(sub.user.email):
                 subs[sub.user.email] = [sub.subscribed_to]
             else:
@@ -57,3 +62,20 @@ def new_lisings_week():
                 [email],
                 html_message=message,
             )
+
+
+@shared_task
+def verify_phone(phone, sid, token, from_phone, user_id):
+    secret = uuid.uuid4().hex[:4]
+    phone_number = phone
+    phone_from = from_phone
+    account_sid = sid
+    auth_token = token
+    client = Client(account_sid, auth_token)
+    response = client.messages.create(
+        body=f"Your code {secret}", from_=phone_from, to=phone_number
+    )
+    seller = models.Seller.objects.get(id=user_id)
+    models.SMSLog.objects.create(
+        secret_code=secret, seller=seller, response_twillio=response.sid
+    )

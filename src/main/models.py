@@ -1,9 +1,11 @@
 from django.contrib.auth.models import User
+from django.conf import settings
 from django.db import models
 from sorl.thumbnail import ImageField
 
-from .utils import validate_inn
-from .utils import unique_slug_generator
+from main.utils import validate_inn, unique_slug_generator
+
+from main.tasks import verify_phone
 
 
 class Subscriber(models.Model):
@@ -36,6 +38,15 @@ class Seller(User):
         default="uploads/profile/default.png",
         null=False,
     )
+    phone_number = models.CharField(
+        null=True,
+        verbose_name="Phone",
+        error_messages={"invalid": "Phone number must be valid"},
+        unique=True,
+        blank=True,
+        default="",
+        max_length=12,
+    )
 
     @property
     def get_all_listings(self):
@@ -49,6 +60,18 @@ class Seller(User):
             return listings
         else:
             return "This seller has no listings"
+
+    def save(self, *args, **kwargs):
+
+        super().save(*args, **kwargs)
+
+        verify_phone.delay(
+            self.phone_number.as_e164,
+            settings.ACCOUNT_SID,
+            settings.AUTH_TOKEN,
+            settings.PHONE_FROM,
+            self.user_ptr_id,
+        )
 
     class Meta:
         verbose_name = "Seller"
