@@ -1,15 +1,15 @@
 from django.utils.timezone import now
+from django.core.mail import send_mail
+from django.urls import reverse
 from datetime import timedelta
 from celery.utils.log import get_task_logger
 from celery import shared_task
-from django.core.mail import send_mail
-from django.urls import reverse
+from twilio.rest import Client
 
-from main.administration.tasks.tasks import (
-    notify_subscibers,
-    get_listings_by_created_range,
-)
+
+from main.administration.tasks.tasks import get_listings_by_created_range
 from .models import Subscriber, Car, Item, Service
+
 
 logger = get_task_logger(__name__)
 

@@ -77,6 +77,15 @@ class AbstractBaseListing(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     edited_at = models.DateTimeField(auto_now=True)
     tags = models.ManyToManyField(Tag, related_name="listing")
+    phone_number = models.CharField(
+        null=True,
+        verbose_name="Phone",
+        error_messages={"invalid": "Phone number must be valid"},
+        unique=True,
+        blank=True,
+        default="",
+        max_length=12,
+    )
 
     def __str__(self):
         return f"{self.title}"
@@ -107,3 +116,37 @@ class Picture(models.Model):
 
     def __str__(self):
         return f"{self.img.path}"
+
+
+class SMSLog(models.Model):
+
+    """Twillio logs model"""
+
+    seller = models.ForeignKey(
+        "Seller",
+        verbose_name="Seller",
+        related_name="smslogs",
+        on_delete=models.CASCADE,
+    )
+
+    secret_code = models.CharField(
+        verbose_name="Phone confirmation code",
+        max_length=4,
+        blank=True,
+        null=True,
+        default="",
+    )
+
+    response_twillio = models.TextField(
+        verbose_name="Provider's response",
+        blank=True,
+        null=True,
+        default="",
+    )
+
+    def __str__(self):
+        return str(self.secret_code)
+
+    class Meta:
+        verbose_name = "SMS Journal"
+        verbose_name_plural = "SMS Journals"
