@@ -1,7 +1,9 @@
+from logging import PlaceHolder
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.db import models
 from sorl.thumbnail import ImageField
+from phonenumber_field.modelfields import PhoneNumberField
 
 from main.utils import validate_inn, unique_slug_generator
 
@@ -38,14 +40,13 @@ class Seller(User):
         default="uploads/profile/default.png",
         null=False,
     )
-    phone_number = models.CharField(
+    phone_number = PhoneNumberField(
         null=True,
         verbose_name="Phone",
         error_messages={"invalid": "Phone number must be valid"},
         unique=True,
         blank=True,
         default="",
-        max_length=12,
     )
 
     @property
@@ -100,14 +101,13 @@ class AbstractBaseListing(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     edited_at = models.DateTimeField(auto_now=True)
     tags = models.ManyToManyField(Tag, related_name="listing")
-    phone_number = models.CharField(
+    phone_number = PhoneNumberField(
         null=True,
         verbose_name="Phone",
         error_messages={"invalid": "Phone number must be valid"},
         unique=True,
         blank=True,
         default="",
-        max_length=12,
     )
 
     def __str__(self):

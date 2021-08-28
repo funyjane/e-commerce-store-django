@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
+from phonenumber_field.formfields import PhoneNumberField
 
 from main.models import AbstractBaseListing, Seller, Car, Item, Service, Tag, Picture
 
@@ -9,12 +10,14 @@ class SellerForm(ModelForm):
     class Meta:
         model = Seller
         fields = "__all__"
+        phone = PhoneNumberField()
 
 
 class BaseListingForm(ModelForm):
     tags = forms.ModelMultipleChoiceField(
         widget=forms.CheckboxSelectMultiple, queryset=Tag.objects.all()
     )
+    phone = PhoneNumberField()
 
     class Meta:
         model = AbstractBaseListing
