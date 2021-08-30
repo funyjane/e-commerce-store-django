@@ -3,6 +3,8 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
+from django.core.cache.utils import make_template_fragment_key
+from django.core.cache import cache
 from django.views.generic import (
     TemplateView,
     ListView,
@@ -22,6 +24,7 @@ from .forms import (
     ServiceForm,
     PictureFormset,
 )
+import random
 
 
 class IndexPageView(TemplateView):
@@ -146,6 +149,11 @@ class CarView(DetailView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+        price = data["object"].price
+        increment = random.uniform(0.8, 1.2)
+        new_price = round(price * increment)
+        key = make_template_fragment_key("random_price")
+        data["object"].price = cache.get_or_set(key, new_price, 60)
         img = Picture.objects.filter(car=self.get_object()).last()
 
         if img == None:
