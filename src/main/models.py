@@ -33,7 +33,10 @@ class Category(models.Model):
 
 class Seller(User):
     code_inn = models.CharField(
-        verbose_name="Tax Code", max_length=12, default="", validators=[validate_inn]
+        verbose_name="Tax Code",
+        max_length=12,
+        default="000000000000",
+        validators=[validate_inn],
     )
     img = ImageField(
         upload_to="uploads/profile_pics/",
