@@ -1,9 +1,13 @@
+from logging import PlaceHolder
 from django.contrib.auth.models import User
+from django.conf import settings
 from django.db import models
 from sorl.thumbnail import ImageField
+from phonenumber_field.modelfields import PhoneNumberField
 
-from .utils import validate_inn
-from .utils import unique_slug_generator
+from main.utils import validate_inn, unique_slug_generator
+
+from main.tasks import verify_phone
 
 
 class Subscriber(models.Model):
@@ -36,6 +40,14 @@ class Seller(User):
         default="uploads/profile/default.png",
         null=False,
     )
+    phone_number = PhoneNumberField(
+        null=True,
+        verbose_name="Phone",
+        error_messages={"invalid": "Phone number must be valid"},
+        unique=True,
+        blank=True,
+        default="",
+    )
 
     @property
     def get_all_listings(self):
@@ -49,6 +61,18 @@ class Seller(User):
             return listings
         else:
             return "This seller has no listings"
+
+    def save(self, *args, **kwargs):
+
+        super().save(*args, **kwargs)
+
+        verify_phone.delay(
+            self.phone_number.as_e164,
+            settings.ACCOUNT_SID,
+            settings.AUTH_TOKEN,
+            settings.PHONE_FROM,
+            self.user_ptr_id,
+        )
 
     class Meta:
         verbose_name = "Seller"
@@ -77,6 +101,14 @@ class AbstractBaseListing(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     edited_at = models.DateTimeField(auto_now=True)
     tags = models.ManyToManyField(Tag, related_name="listing")
+    phone_number = PhoneNumberField(
+        null=True,
+        verbose_name="Phone",
+        error_messages={"invalid": "Phone number must be valid"},
+        unique=True,
+        blank=True,
+        default="",
+    )
 
     def __str__(self):
         return f"{self.title}"
@@ -107,3 +139,37 @@ class Picture(models.Model):
 
     def __str__(self):
         return f"{self.img.path}"
+
+
+class SMSLog(models.Model):
+
+    """Twillio logs model"""
+
+    seller = models.ForeignKey(
+        "Seller",
+        verbose_name="Seller",
+        related_name="smslogs",
+        on_delete=models.CASCADE,
+    )
+
+    secret_code = models.CharField(
+        verbose_name="Phone confirmation code",
+        max_length=4,
+        blank=True,
+        null=True,
+        default="",
+    )
+
+    response_twillio = models.TextField(
+        verbose_name="Provider's response",
+        blank=True,
+        null=True,
+        default="",
+    )
+
+    def __str__(self):
+        return str(self.secret_code)
+
+    class Meta:
+        verbose_name = "SMS Journal"
+        verbose_name_plural = "SMS Journals"

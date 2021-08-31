@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 import os
 from celery import Celery
+from celery.schedules import crontab
 from django.conf import settings
 
 interval = 3
@@ -21,5 +22,8 @@ def debug_task(self):
 
 
 app.conf.beat_schedule = {
-    "new_lisings_week": {"task": "main.tasks.new_lisings_week", "schedule": 5.0}
+    "new_lisings_week": {
+        "task": "main.tasks.new_lisings_week",
+        "schedule": crontab(day_of_week=1, hour=12, minute=0),
+    }
 }

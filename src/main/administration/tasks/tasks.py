@@ -3,7 +3,7 @@ import logging
 from django.conf import settings
 from django.utils.timezone import now
 from datetime import timedelta
-from main.models import Car, Item, Service, Subscriber
+from main import models
 from django.core.mail import send_mail
 
 
@@ -30,15 +30,19 @@ def notify_subscibers():
     """Send notifications."""
     current_time = (now(),)
     last_message_time = current_time[0] - timedelta(minutes=interval)
-    new_car = get_listings_by_created_range(Car, last_message_time, current_time[0])
-    new_item = get_listings_by_created_range(Item, last_message_time, current_time[0])
+    new_car = get_listings_by_created_range(
+        models.Car, last_message_time, current_time[0]
+    )
+    new_item = get_listings_by_created_range(
+        models.Item, last_message_time, current_time[0]
+    )
     new_service = get_listings_by_created_range(
-        Service, last_message_time, current_time[0]
+        models.Service, last_message_time, current_time[0]
     )
 
     if new_car or new_item or new_service:
         subs = dict()
-        for s in Subscriber.objects.all():
+        for s in models.Subscriber.objects.all():
             if not subs.get(s.user.email):
                 subs[s.user.email] = [s.subscribed_to]
             else:
