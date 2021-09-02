@@ -11,6 +11,10 @@ from main.tasks import verify_phone
 
 
 class Subscriber(models.Model):
+    """
+    Subscriber used as a mailing list for subscribed Users
+    """
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     subscribed_to = models.CharField(max_length=30)
 
@@ -19,10 +23,17 @@ class Subscriber(models.Model):
 
 
 class Category(models.Model):
+    """
+    Category model instance
+    """
+
     title = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
+        """
+        Generates a unique slug field based on the tite
+        """
         if not self.slug:
             self.slug = unique_slug_generator(self)
         super(Category, self).save(*args, **kwargs)
@@ -32,6 +43,10 @@ class Category(models.Model):
 
 
 class Seller(User):
+    """
+    Category model instance
+    """
+
     code_inn = models.CharField(
         verbose_name="Tax Code",
         max_length=12,
@@ -66,6 +81,9 @@ class Seller(User):
             return "This seller has no listings"
 
     def save(self, *args, **kwargs):
+        """
+        sends out a verification msg to when new Seller instance is created
+        """
 
         super().save(*args, **kwargs)
 
@@ -85,6 +103,10 @@ class Seller(User):
 
 
 class Tag(models.Model):
+    """
+    Tag model instance
+    """
+
     title = models.CharField(max_length=100)
 
     def __str__(self):
@@ -92,6 +114,10 @@ class Tag(models.Model):
 
 
 class AbstractBaseListing(models.Model):
+    """
+    Main Listing model instance - serves as abstract model class
+    """
+
     title = models.CharField(max_length=100)
     description = models.TextField()
     price = models.PositiveIntegerField(blank=False, default=1)
@@ -118,24 +144,43 @@ class AbstractBaseListing(models.Model):
 
 
 class Item(AbstractBaseListing):
+    """
+    Item model instance
+    """
+
     used = models.BooleanField(default=True)
 
 
 class Car(AbstractBaseListing):
+    """
+    Item model instance
+    """
+
     brand_name = models.CharField(max_length=100)
 
 
 class Service(AbstractBaseListing):
+    """
+    Item model instance
+    """
+
     type_of = models.CharField(max_length=100)
 
 
 class ArchiveListing(AbstractBaseListing):
+    """
+    ArchiveListing model instance - used to register AbstractListing in admin.py
+    """
+
     class Meta:
         proxy = True
         ordering = ["created_at"]
 
 
 class Picture(models.Model):
+    """
+    picture field for Car model instance
+    """
 
     img = ImageField(upload_to="uploads/cars/", null=False)
     car = models.ForeignKey(Car, on_delete=models.CASCADE, null=False)
@@ -145,8 +190,9 @@ class Picture(models.Model):
 
 
 class SMSLog(models.Model):
-
-    """Twillio logs model"""
+    """
+    Twillio logs model
+    """
 
     seller = models.ForeignKey(
         "Seller",
