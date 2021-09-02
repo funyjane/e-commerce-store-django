@@ -49,7 +49,7 @@ urlpatterns = [
     ),
     path(
         "cars/<int:pk>/",
-        cache_page(60 * cache_minutes_detailview)(CarView.as_view()),
+        CarView.as_view(),
         name="car-details",
     ),
     path("cars/add/", CarCreateView.as_view(), name="car-create"),
