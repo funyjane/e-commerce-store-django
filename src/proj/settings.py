@@ -62,6 +62,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount.providers.google",
     "django_celery_beat",
     "debug_toolbar",
+    "channels",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
@@ -233,3 +234,16 @@ CACHES = {
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+# CONFIG Channels
+CHANNEL_REDIS_HOST = "redis://localhost:6379"
+ASGI_APPLICATION = "proj.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [CHANNEL_REDIS_HOST],
+            "symmetric_encryption_keys": [SECRET_KEY],
+        },
+    },
+}
