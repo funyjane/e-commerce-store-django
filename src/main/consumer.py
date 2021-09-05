@@ -31,7 +31,7 @@ class AdConsumer(AsyncJsonWebsocketConsumer):
         date = datetime.now()
         if text_data[0] == "#":
             search_result = await database_sync_to_async(self.get_ad)(
-                name=text_data[1:]
+                title=text_data[1:]
             )
             await self.send_json(
                 content={
@@ -51,24 +51,24 @@ class AdConsumer(AsyncJsonWebsocketConsumer):
 
     def get_ad(self, name):
         try:
-            ad = AbstractBaseListing.objects.get_subclass(
-                name=name
+            ad = AbstractBaseListing.objects.filter(
+                title=name
             )  # get current child listing model
         except ObjectDoesNotExist:
             return "Nothing has been found!"
-        if ad.sold:
+        if ad[0].sold:
             result = "Sold!"
-        local_fields = ad._meta.local_fields[
+        local_fields = ad[0]._meta.local_fields[
             1:
         ]  # getting list of local fields in current model
         verbose_names = [model.verbose_name for model in local_fields]
         values = [
-            str(ad.__getattribute__(item.name)) + "</div>" for item in local_fields
+            str(ad[0].__getattribute__(item.name)) + "</div>" for item in local_fields
         ]  # getting local fields values
         output = (
             '<div class="d-flex flex-row"><div class="d-flex flex-column">'
-            + 'Цена: </div><div class="d-flex flex-column">'
-            + str(ad.price)
+            + 'Price: </div><div class="d-flex flex-column">'
+            + str(ad[0].price)
             + "</div></div>"
         )
         for verbose_name, value in zip(verbose_names, values):
