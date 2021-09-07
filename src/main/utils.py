@@ -4,11 +4,13 @@ import random
 import string
 
 
-def random_string_generator(size=10, chars=string.ascii_lowercase + string.digits):
+def random_string_generator(
+    size=10, chars=string.ascii_lowercase + string.digits
+) -> str:
     return "".join(random.choice(chars) for _ in range(size))
 
 
-def unique_slug_generator(instance, new_slug=None):
+def unique_slug_generator(instance, new_slug=None) -> str:
 
     if new_slug is not None:
         slug = new_slug
@@ -25,7 +27,7 @@ def unique_slug_generator(instance, new_slug=None):
     return slug
 
 
-def check_inn(inn):
+def check_inn(inn) -> bool:
 
     if len(inn) not in (10, 12):
         return False

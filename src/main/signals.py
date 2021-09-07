@@ -10,7 +10,7 @@ from .tasks import email_subs_on_new_ad
 
 
 @receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
+def create_user_profile(sender, instance, created, **kwargs) -> None:
     """
     Assign the default common_users group to every new user
     """
@@ -38,7 +38,7 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=Car)
 @receiver(post_save, sender=Item)
 @receiver(post_save, sender=Service)
-def create_new_ad_actions(sender, instance, created, **kwargs):
+def create_new_ad_actions(sender, instance, created, **kwargs) -> None:
     """
     sends email to Subscribers when new listing is created
     """

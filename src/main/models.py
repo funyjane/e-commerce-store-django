@@ -2,6 +2,7 @@ from logging import PlaceHolder
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.db import models
+from django.db.models.query import QuerySet
 from sorl.thumbnail import ImageField
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -18,7 +19,7 @@ class Subscriber(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     subscribed_to = models.CharField(max_length=30)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.user}, subscribed to: {self.subscribed_to}"
 
 
@@ -30,7 +31,7 @@ class Category(models.Model):
     title = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         """
         Generates a unique slug field based on the tite
         """
@@ -38,11 +39,11 @@ class Category(models.Model):
             self.slug = unique_slug_generator(self)
         super(Category, self).save(*args, **kwargs)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.title}"
 
 
-class Seller(User):
+class Seller(User):  # type: ignore
     """
     Category model instance
     """
@@ -68,7 +69,7 @@ class Seller(User):
     )
 
     @property
-    def get_all_listings(self):
+    def get_all_listings(self) -> int:
         """
         return a number of all listing from the seller
         """
@@ -98,7 +99,7 @@ class Seller(User):
     class Meta:
         verbose_name = "Seller"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.username}"
 
 
@@ -109,7 +110,7 @@ class Tag(models.Model):
 
     title = models.CharField(max_length=100)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.title}"
 
 
@@ -139,7 +140,7 @@ class AbstractBaseListing(models.Model):
         default="",
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.title}"
 
 
