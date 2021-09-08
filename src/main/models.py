@@ -88,13 +88,14 @@ class Seller(User):  # type: ignore
 
         super().save(*args, **kwargs)
 
-        verify_phone.delay(
-            self.phone_number.as_e164,
-            settings.ACCOUNT_SID,
-            settings.AUTH_TOKEN,
-            settings.PHONE_FROM,
-            self.user_ptr_id,
-        )
+        if self.phone_number:
+            verify_phone.delay(
+                self.phone_number.as_e164,
+                settings.ACCOUNT_SID,
+                settings.AUTH_TOKEN,
+                settings.PHONE_FROM,
+                self.user_ptr_id,
+            )
 
     class Meta:
         verbose_name = "Seller"
