@@ -55,11 +55,11 @@ class AdConsumer(AsyncJsonWebsocketConsumer):
         )
 
     def get_ad(self, name):
-        try:
-            ad = AbstractBaseListing.objects.filter(
-                title=name
-            )  # get current child listing model
-        except ObjectDoesNotExist:
+
+        ad = AbstractBaseListing.objects.filter(
+            title=name
+        )  # get current child listing model
+        if not ad.exists():
             return "Nothing has been found!"
         if ad[0].sold:
             result = "Sold!"
