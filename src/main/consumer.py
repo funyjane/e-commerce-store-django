@@ -31,7 +31,7 @@ class AdConsumer(AsyncJsonWebsocketConsumer):
         date = datetime.now()
         if text_data[0] == "#":
             search_result = await database_sync_to_async(self.get_ad)(
-                title=text_data[1:]
+                name=text_data[1:]
             )
             await self.send_json(
                 content={
@@ -47,7 +47,12 @@ class AdConsumer(AsyncJsonWebsocketConsumer):
 
     async def disconnect(self, close_code):
         # Called when the socket closes
-        pass
+        await self.send_json(
+            content={
+                "type": "message",
+                "data": "closed",
+            }
+        )
 
     def get_ad(self, name):
         try:

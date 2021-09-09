@@ -236,7 +236,7 @@ INTERNAL_IPS = [
 ]
 
 # CONFIG Channels
-CHANNEL_REDIS_HOST = "redis://localhost:6379"
+CHANNEL_REDIS_HOST = "redis://127.0.0.1:6379"
 ASGI_APPLICATION = "proj.asgi.application"
 CHANNEL_LAYERS = {
     "default": {

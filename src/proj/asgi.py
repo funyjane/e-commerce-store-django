@@ -8,7 +8,7 @@ https://docs.djangoproject.com/en/3.2/howto/deployment/asgi/
 """
 
 
-from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.routing import ProtocolTypeRouter
 from channels.auth import AuthMiddlewareStack
 from main.routing import websockets
 
