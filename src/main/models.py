@@ -65,7 +65,6 @@ class Seller(User):  # type: ignore
         error_messages={"invalid": "Phone number must be valid"},
         unique=True,
         blank=True,
-        default="",
     )
 
     @property
@@ -138,8 +137,8 @@ class AbstractBaseListing(models.Model):
         error_messages={"invalid": "Phone number must be valid"},
         unique=True,
         blank=True,
-        default="",
     )
+    sold = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return f"{self.title}"

@@ -49,11 +49,12 @@ class ServiceFactory(DjangoModelFactory):
     class Meta:
         model = Service
 
-    name = factory.Faker("sentence", nb_words=3)
+    title = factory.Faker("sentence", nb_words=3)
     description = factory.Faker("paragraph", nb_sentences=10)
     category = factory.SubFactory(CategoryFactory)
     seller = factory.SubFactory(SellerFactory)
     type_of = factory.Faker("sentence", nb_words=2)
+    sold = False
 
     @factory.post_generation
     def tags(self, create, extracted, **kwargs):
@@ -89,6 +90,7 @@ class CarFactory(DjangoModelFactory):
     )
     seller = factory.SubFactory(SellerFactory)
     price = random.randrange(100000, 15000000, 10000)
+    sold = False
 
     @factory.post_generation
     def tags(self, create, extracted, **kwargs):
@@ -106,11 +108,12 @@ class ItemFactory(DjangoModelFactory):
     class Meta:
         model = Item
 
-    name = factory.Faker("sentence", nb_words=3)
+    title = factory.Faker("sentence", nb_words=3)
     description = factory.Faker("paragraph", nb_sentences=10)
     category = factory.SubFactory(CategoryFactory)
     seller = factory.SubFactory(SellerFactory)
     used = factory.Faker("pybool")
+    sold = False
 
     @factory.post_generation
     def tags(self, create, extracted, **kwargs):

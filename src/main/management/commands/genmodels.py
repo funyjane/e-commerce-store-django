@@ -53,7 +53,7 @@ class Command(BaseCommand):
         for car_ad in self.cars:
             PictureFactory(
                 car=car_ad,
-                pic="uploads/car_pics/"
+                img="uploads/car_pics/"
                 + download_image_from_url("https://picsum.photos/700/500"),
             )
 
