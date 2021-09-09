@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from slugify import slugify
+import re
 import random
 import string
 
@@ -52,3 +53,10 @@ def validate_inn(inn):
             "Tax %(value)s - is incorrect! Please enter a valid Tax code",
             params={"value": inn},
         )
+
+
+TAG_RE = re.compile(r"<[^>]+>")
+
+
+def remove_tags(text):
+    return TAG_RE.sub("", text)
