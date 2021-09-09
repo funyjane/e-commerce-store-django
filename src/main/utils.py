@@ -4,10 +4,12 @@ from main import models
 
 from random import randint
 from slugify import slugify
+
 from datetime import datetime
 
 import os
 import requests
+import re
 import random
 import string
 
@@ -60,6 +62,7 @@ def validate_inn(inn):
             "Tax %(value)s - is incorrect! Please enter a valid Tax code",
             params={"value": inn},
         )
+
 
 
 def inn_ctrl_summ(nums, type):
@@ -132,3 +135,8 @@ def generate_phone():
         number = "+44" + str(random.randint(10000000000, 99999999999))
         objects_pool = models.Seller.objects.filter(phone_number=number)
     return number
+  
+TAG_RE = re.compile(r"<[^>]+>")
+
+def remove_tags(text):
+    return TAG_RE.sub("", text)

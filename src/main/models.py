@@ -131,6 +131,7 @@ class AbstractBaseListing(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     edited_at = models.DateTimeField(auto_now=True)
     tags = models.ManyToManyField(Tag, related_name="listing")
+    sold = models.BooleanField(default=False)
     phone_number = PhoneNumberField(
         null=True,
         verbose_name="Phone",
