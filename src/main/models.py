@@ -65,7 +65,6 @@ class Seller(User):  # type: ignore
         error_messages={"invalid": "Phone number must be valid"},
         unique=True,
         blank=True,
-        default="",
     )
 
     @property
@@ -88,13 +87,14 @@ class Seller(User):  # type: ignore
 
         super().save(*args, **kwargs)
 
-        verify_phone.delay(
-            self.phone_number.as_e164,
-            settings.ACCOUNT_SID,
-            settings.AUTH_TOKEN,
-            settings.PHONE_FROM,
-            self.user_ptr_id,
-        )
+        if self.phone_number:
+            verify_phone.delay(
+                self.phone_number.as_e164,
+                settings.ACCOUNT_SID,
+                settings.AUTH_TOKEN,
+                settings.PHONE_FROM,
+                self.user_ptr_id,
+            )
 
     class Meta:
         verbose_name = "Seller"
@@ -138,8 +138,8 @@ class AbstractBaseListing(models.Model):
         error_messages={"invalid": "Phone number must be valid"},
         unique=True,
         blank=True,
-        default="",
     )
+    sold = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return f"{self.title}"
