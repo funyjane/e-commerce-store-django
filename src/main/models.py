@@ -139,7 +139,7 @@ class AbstractBaseListing(models.Model):
         unique=True,
         blank=True,
     )
-    sold = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
 
     def __str__(self) -> str:
         return f"{self.title}"
