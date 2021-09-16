@@ -77,6 +77,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.contrib.flatpages.middleware.FlatpageFallbackMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "main.middlewares.MyMiddleware",  # custom middleware
 ]
 
 ROOT_URLCONF = "proj.urls"
