@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.db import models
 from django.db.models.query import QuerySet
+from django.contrib.postgres.fields import ArrayField
 from sorl.thumbnail import ImageField
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -103,15 +104,15 @@ class Seller(User):  # type: ignore
         return f"{self.username}"
 
 
-class Tag(models.Model):
-    """
-    Tag model instance
-    """
+# class Tag(models.Model):
+#     """
+#     Tag model instance
+#     """
 
-    title = models.CharField(max_length=100)
+#     title = models.CharField(max_length=100)
 
-    def __str__(self) -> str:
-        return f"{self.title}"
+#     def __str__(self) -> str:
+#         return f"{self.title}"
 
 
 class AbstractBaseListing(models.Model):
@@ -130,7 +131,7 @@ class AbstractBaseListing(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     edited_at = models.DateTimeField(auto_now=True)
-    tags = models.ManyToManyField(Tag, related_name="listing")
+    tags = ArrayField(models.CharField(max_length=100), null=True)
     sold = models.BooleanField(default=False)
     phone_number = PhoneNumberField(
         null=True,

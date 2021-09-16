@@ -42,8 +42,8 @@
             ><i class="bx bx-link"></i
           ></a>
           <ul style="list-style-type:'\1F44D';">
-            {% for tag in listing.tags.select_related %}
-                <li><a style="color: aliceblue;" href="?tag={{ tag.title }}">{{ tag.title }}</a> </li>
+            {% for tag in listing.tags %}
+                <li><a style="color: aliceblue;" href="?tag={{ tag }}">{{ tag }}</a> </li>
             {% endfor %}
           </ul>
         </div>
