@@ -64,7 +64,6 @@ def validate_inn(inn):
         )
 
 
-
 def inn_ctrl_summ(nums, type):
     """
     calculating inn control sum
@@ -135,8 +134,14 @@ def generate_phone():
         number = "+44" + str(random.randint(10000000000, 99999999999))
         objects_pool = models.Seller.objects.filter(phone_number=number)
     return number
-  
+
+
 TAG_RE = re.compile(r"<[^>]+>")
+
 
 def remove_tags(text):
     return TAG_RE.sub("", text)
+
+
+def trigger_error(request):
+    division_by_zero = 1 / 0
