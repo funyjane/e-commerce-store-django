@@ -60,6 +60,10 @@
           </ul>
           <i class="bi bi-list mobile-nav-toggle"></i>
         </nav>
+        <form class="form-inline mt-2 mt-md-0" method="GET" action="{% url 'main:search' %}">
+          <input class="form-control mr-sm-2" type="text" name='q' placeholder="Search for listing" aria-label="Search for listing">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
         <!-- .navbar -->
       </div>
     </header>
