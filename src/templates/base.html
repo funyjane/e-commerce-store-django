@@ -8,7 +8,7 @@
     <title>{% block title %}
     Rynok Marketplace
     {% endblock title %}</title>
-    <meta content="" name="description" />
+    <meta name="description" content="{% block seo_description %} At RYNOK you can buy for cheap or profitably sell a used car or a new car, order or offer services, as well as buy new or used clothes, furniture {% endblock seo_description %}">
     <meta content="" name="keywords" />
 
     <!-- Favicons -->
@@ -195,6 +195,23 @@
       class="back-to-top d-flex align-items-center justify-content-center"
       ><i class="bi bi-arrow-up-short"></i
     ></a>
+      <!-- JSON-LD -->
+    {% block json_ld %}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "url": "{{ request.build_absolute_uri }}",
+        "name":"RYNOK",
+        "alternateName":"RYNOK. We can help you sell anything, even your mom.",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "{{ request.build_absolute_uri }}search/?&q={query}",
+          "query": "required"
+        }
+    }
+    </script>
+      {% endblock json_ld %}
 
     <!-- Vendor JS Files -->
     <script src="{% static 'vendor/aos/aos.js' %}"></script>
