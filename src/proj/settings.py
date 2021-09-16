@@ -63,6 +63,7 @@ THIRD_PARTY_APPS = [
     "django_celery_beat",
     "debug_toolbar",
     "channels",
+    "django.contrib.sitemaps",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
