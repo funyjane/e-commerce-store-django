@@ -18,7 +18,6 @@ from main.models import (
     Category,
     Seller,
     Subscriber,
-    Tag,
     Item,
     Car,
     Service,
@@ -47,16 +46,6 @@ admin.site.register(FlatPage, FlatPageAdmin)
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
-
-
-@admin.register(Tag)
-class TagAdmin(admin.ModelAdmin):
-    search_fields = [
-        "title",
-    ]
-    list_display = [
-        "title",
-    ]
 
 
 class PictureAdminInline(AdminImageMixin, admin.TabularInline):
@@ -96,7 +85,6 @@ class AdSubModelsAdmin(AdminImageMixin, admin.ModelAdmin):
         "active",
         "created_at",
         "edited_at",
-        ("tags", admin.RelatedOnlyFieldListFilter),
     )
     inlines = [PictureAdminInline]
     search_fields = [

@@ -15,7 +15,7 @@ from django.views.generic import (
 from django.contrib.auth.mixins import LoginRequiredMixin
 from constance import config
 
-from .models import AbstractBaseListing, Item, Car, Service, Tag, Seller, Picture
+from .models import AbstractBaseListing, Item, Car, Service, Seller, Picture
 from .forms import (
     SellerForm,
     BaseListingForm,
@@ -41,7 +41,7 @@ class BaseListingListView(ListView):
         tag_filter = self.request.GET.get("tag")
         if tag_filter:
             new_context = AbstractBaseListing.objects.filter(
-                tags=Tag.objects.get(title=tag_filter)
+                tags__contains=[tag_filter]
             )
         else:
             new_context = AbstractBaseListing.objects.all()
@@ -92,7 +92,7 @@ class ItemListView(ListView):
     def get_queryset(self):
         tag_filter = self.request.GET.get("tag")
         if tag_filter:
-            new_context = Item.objects.filter(tags=Tag.objects.get(title=tag_filter))
+            new_context = Item.objects.filter(tags__contains=[tag_filter])
         else:
             new_context = Item.objects.all()
         return new_context
@@ -132,7 +132,7 @@ class CarListView(ListView):
     def get_queryset(self):
         tag_filter = self.request.GET.get("tag")
         if tag_filter:
-            new_context = Car.objects.filter(tags=Tag.objects.get(title=tag_filter))
+            new_context = Car.objects.filter(tags__contains=[tag_filter])
         else:
             new_context = Car.objects.all()
         return new_context
@@ -221,7 +221,7 @@ class ServiceListView(ListView):
     def get_queryset(self):
         tag_filter = self.request.GET.get("tag")
         if tag_filter:
-            new_context = Service.objects.filter(tags=Tag.objects.get(title=tag_filter))
+            new_context = Service.objects.filter(tags__contains=[tag_filter])
         else:
             new_context = Service.objects.all()
         return new_context

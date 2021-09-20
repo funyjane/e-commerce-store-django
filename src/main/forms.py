@@ -1,9 +1,12 @@
+import re
 from django import forms
 from django.forms import ModelForm
+from django.core.exceptions import ValidationError
 from django.forms.models import inlineformset_factory
 from phonenumber_field.formfields import PhoneNumberField
+from django.contrib.postgres.forms import SimpleArrayField
 
-from main.models import AbstractBaseListing, Seller, Car, Item, Service, Tag, Picture
+from main.models import AbstractBaseListing, Seller, Car, Item, Service, Picture
 
 
 class SellerForm(ModelForm):
@@ -13,10 +16,30 @@ class SellerForm(ModelForm):
         phone = PhoneNumberField()
 
 
+class CustomSimpleArrayField(SimpleArrayField):
+    def to_python(self, value):
+        """Normalize data to a list of strings."""
+        # Return an empty list if no input was given.
+        if not value:
+            return []
+        return value.split(",").strip()
+
+    def validate(self, values):
+        """Check if value consists only of valid emails."""
+        # Use the parent's handling of required fields, etc.
+        super().validate(values)
+        for tag in values:
+            if not re.match(f"^[0-9a-zA-Z ]+$", tag):
+                raise ValidationError(
+                    _(
+                        "Validation error! Use only alphanumeric "
+                        + "symbols for tags and comma as delimiter!"
+                    )
+                )
+
+
 class BaseListingForm(ModelForm):
-    tags = forms.ModelMultipleChoiceField(
-        widget=forms.CheckboxSelectMultiple, queryset=Tag.objects.all()
-    )
+    tags = CustomSimpleArrayField(forms.CharField(max_length=50), delimiter=",")
     phone = PhoneNumberField()
 
     class Meta:
@@ -25,9 +48,9 @@ class BaseListingForm(ModelForm):
 
 
 class CarForm(ModelForm):
-    tags = forms.ModelMultipleChoiceField(
-        widget=forms.CheckboxSelectMultiple, queryset=Tag.objects.all()
-    )
+    """This form is for creation and editing Car ads"""
+
+    tags = CustomSimpleArrayField(forms.CharField(max_length=50), delimiter=",")
 
     class Meta:
         model = Car
@@ -35,9 +58,7 @@ class CarForm(ModelForm):
 
 
 class ItemForm(ModelForm):
-    tags = forms.ModelMultipleChoiceField(
-        widget=forms.CheckboxSelectMultiple, queryset=Tag.objects.all()
-    )
+    tags = CustomSimpleArrayField(forms.CharField(max_length=50), delimiter=",")
 
     class Meta:
         model = Item
@@ -45,9 +66,7 @@ class ItemForm(ModelForm):
 
 
 class ServiceForm(ModelForm):
-    tags = forms.ModelMultipleChoiceField(
-        widget=forms.CheckboxSelectMultiple, queryset=Tag.objects.all()
-    )
+    tags = CustomSimpleArrayField(forms.CharField(max_length=50), delimiter=",")
 
     class Meta:
         model = Service

@@ -53,7 +53,7 @@
         </div>
         <div class="portfolio-info">
           <ul>
-            <li>tags</strong>: {% for tag in object.tags.all %}#{{ tag.title }} {% endfor %}</li>
+            <li>tags</strong>: {% for tag in object.tags %}#{{ tag }} {% endfor %}</li>
           </ul>
         </div>
       </div>
