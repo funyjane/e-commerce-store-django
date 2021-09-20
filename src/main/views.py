@@ -1,8 +1,11 @@
+import random
+
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.core.cache.utils import make_template_fragment_key
 from django.core.cache import cache
 from django.views.generic import (
@@ -24,7 +27,6 @@ from .forms import (
     ServiceForm,
     PictureFormset,
 )
-import random
 
 
 class IndexPageView(TemplateView):
@@ -72,6 +74,34 @@ class BaseListingCreateView(CreateView):
             raise PermissionDenied(_("Ops, you have been banned, you cannot post!"))
         else:
             return super().form_valid(form)
+
+
+class SearchView(BaseListingListView):
+    """Name and description search on ads"""
+
+    model = AbstractBaseListing
+    template_name = "main/search.html"
+    context_object_name = "ads"
+
+    def get_queryset(self):
+        q = self.request.GET.get("q", "")
+        if q:
+            vector = SearchVector("title", "description")
+            query = SearchQuery(q)
+            context = (
+                self.model.objects.annotate(rank=SearchRank(vector, query))
+                .filter(rank__gte=0.0001)
+                .order_by("-rank")
+            )
+        else:
+            context = self.model.objects.all()
+
+        tag_filter = self.request.GET.get("tag", [])
+        if tag_filter:
+            new_context = context.filter(tags__contains=[tag_filter])
+        else:
+            new_context = context.all()
+        return new_context
 
 
 class BaseListingUpdateView(UpdateView):
