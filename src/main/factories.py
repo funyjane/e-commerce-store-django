@@ -11,7 +11,6 @@ from main.models import (
     Car,
     Service,
     Item,
-    Tag,
     Picture,
 )
 
@@ -21,15 +20,6 @@ class CategoryFactory(DjangoModelFactory):
         model = Category
 
     title = factory.Faker("sentence", nb_words=3)
-
-
-class TagFactory(DjangoModelFactory):
-    class Meta:
-        model = Tag
-
-    title = factory.Faker(
-        "word",
-    )
 
 
 class SellerFactory(DjangoModelFactory):
@@ -55,17 +45,7 @@ class ServiceFactory(DjangoModelFactory):
     seller = factory.SubFactory(SellerFactory)
     type_of = factory.Faker("sentence", nb_words=2)
     sold = False
-
-    @factory.post_generation
-    def tags(self, create, extracted, **kwargs):
-        if not create:
-            return
-
-        if extracted:
-            rnd = random.randint(1, 4)
-            for i in range(min(rnd, len(extracted))):
-                tag = extracted[random.randint(0, len(extracted) - 1)]
-                self.tags.add(tag)
+    tags = factory.Faker("words", nb=random.randint(1, 6))
 
 
 class CarFactory(DjangoModelFactory):
@@ -91,17 +71,7 @@ class CarFactory(DjangoModelFactory):
     seller = factory.SubFactory(SellerFactory)
     price = random.randrange(100000, 15000000, 10000)
     sold = False
-
-    @factory.post_generation
-    def tags(self, create, extracted, **kwargs):
-        if not create:
-            return
-
-        if extracted:
-            rnd = random.randint(1, 4)
-            for i in range(min(rnd, len(extracted))):
-                tag = extracted[random.randint(0, len(extracted) - 1)]
-                self.tags.add(tag)
+    tags = factory.Faker("words", nb=random.randint(1, 6))
 
 
 class ItemFactory(DjangoModelFactory):
@@ -114,17 +84,7 @@ class ItemFactory(DjangoModelFactory):
     seller = factory.SubFactory(SellerFactory)
     used = factory.Faker("pybool")
     sold = False
-
-    @factory.post_generation
-    def tags(self, create, extracted, **kwargs):
-        if not create:
-            return
-
-        if extracted:
-            rnd = random.randint(1, 4)
-            for i in range(min(rnd, len(extracted))):
-                tag = extracted[random.randint(0, len(extracted) - 1)]
-                self.tags.add(tag)
+    tags = factory.Faker("words", nb=random.randint(1, 6))
 
 
 class PictureFactory(DjangoModelFactory):

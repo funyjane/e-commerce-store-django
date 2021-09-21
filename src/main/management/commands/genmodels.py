@@ -7,7 +7,6 @@ from main.models import (
     Item,
     Service,
     Category,
-    Tag,
     Seller,
 )
 from main.factories import (
@@ -16,7 +15,6 @@ from main.factories import (
     ServiceFactory,
     ItemFactory,
     CategoryFactory,
-    TagFactory,
     PictureFactory,
 )
 from main.utils import download_image_from_url
@@ -34,9 +32,6 @@ class Command(BaseCommand):
 
         for _ in range(TESTS_QTY):
             CategoryFactory()
-
-        for _ in range(TESTS_QTY):
-            TagFactory()
 
         for _ in range(TESTS_QTY):
             SellerFactory()
