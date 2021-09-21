@@ -1,5 +1,6 @@
 from django.urls import path, re_path, include
 from django.conf.urls.static import static
+from .utils import trigger_error
 from django.views.decorators.cache import cache_page
 from django.conf import settings
 
@@ -10,6 +11,8 @@ cache_minutes_detailview = 60
 app_name = "main"
 
 urlpatterns = [
+
+    path("sentry-debug/", trigger_error),
     re_path(r"^search/[.]*$", (SearchView.as_view()), name="search"),
     path(
         "all/",
