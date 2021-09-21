@@ -3,6 +3,7 @@
 {% load thumbnail %}
 
 {% block title %}Listings{% endblock title %}
+{% block seo_description %}{% for field, value in object|get_fields %}{% if field != 'ad ptr' %}{{ field }}: {{ value }}, {% endif %}{% endfor %}{% endblock seo_description %}
 {% block content %}
 <!-- ======= Portfolio Details Section ======= -->
 <section id="portfolio-details" class="portfolio-details">
