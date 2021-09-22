@@ -2,6 +2,8 @@ from django.urls import path, re_path, include
 from django.conf.urls.static import static
 from .utils import trigger_error
 from django.views.decorators.cache import cache_page
+from django.contrib.sitemaps.views import sitemap
+from django.contrib.sitemaps import GenericSitemap
 from django.conf import settings
 
 from .views import *
@@ -10,10 +12,34 @@ cache_minutes_listview = 15
 cache_minutes_detailview = 60
 app_name = "main"
 
+car_map = {
+    "queryset": Car.objects.all(),
+}
+
+item_map = {
+    "queryset": Item.objects.all(),
+}
+
+service_map = {
+    "queryset": Service.objects.all(),
+}
+
 urlpatterns = [
 
     path("sentry-debug/", trigger_error),
     re_path(r"^search/[.]*$", (SearchView.as_view()), name="search"),
+    path(
+        "sitemap.xml",
+        sitemap,
+        {
+            "sitemaps": {
+                "cars": GenericSitemap(car_map),
+                "things": GenericSitemap(item_map),
+                "services": GenericSitemap(service_map),
+            }
+        },
+        name="django.contrib.sitemaps.views.sitemap",
+    ),
     path(
         "all/",
         cache_page(60 * cache_minutes_listview)(BaseListingListView.as_view()),
